@@ -3,7 +3,7 @@
 A task management REST API built with **ASP.NET Core 8 (C#)** and **PostgreSQL**.
 
 > **Note on language choice:** The assignment spec prefers Go but explicitly allows other languages.
-> This implementation uses C# / .NET 8, which I know well. The architecture directly mirrors
+> This implementation uses C# / .NET 8. The architecture directly mirrors
 > what a clean Go implementation would look like: thin controllers, no over-engineered service layers,
 > standard library patterns where possible.
 
@@ -16,8 +16,6 @@ A task management REST API built with **ASP.NET Core 8 (C#)** and **PostgreSQL**
 | Framework | ASP.NET Core 8 | Mature, performant, great DI & middleware story |
 | ORM | Entity Framework Core 8 + Npgsql | Type-safe queries, migration tooling |
 | Auth | JWT Bearer + BCrypt.Net | Industry standard; bcrypt cost 12 for passwords |
-| Logging | Serilog | Structured JSON logs, request logging middleware |
-| Docs | Swagger / OpenAPI | Auto-generated, browsable at `/swagger` |
 | Database | PostgreSQL 16 | Required by spec |
 | Container | Docker (multi-stage) | Minimal runtime image ~100MB |
 
@@ -37,14 +35,9 @@ TaskFlow lets users register, log in, create projects, add tasks to those projec
 
 **`TaskItem` model name** — C# has a built-in `System.Threading.Tasks.Task`. The domain model is named `TaskItem` to avoid ambiguity; the DB table is still called `Tasks`.
 
-**Seeding in app startup** — `DbSeeder` runs `MigrateAsync()` on every startup, then checks if data exists before seeding. This means `docker compose up` always produces a ready-to-use database with zero extra steps.
+**Seeding on app startup** — `DbSeeder` uses `EnsureCreated()` to initialize the schema and seed data automatically. This simplifies setup for local development.
 
 **Status/priority as strings in DB** — Stored as `text` (enum name) rather than integers. Makes DB queries human-readable without joins to a lookup table.
-
-**What I intentionally left out:**
-- Refresh tokens (out of scope for 3–5 hour assignment)
-- Rate limiting (would add with ASP.NET Core rate limiting middleware)
-- Full integration test suite (added unit coverage for auth flow; see bonus section)
 
 ---
 
@@ -93,8 +86,6 @@ to initialize the database schema during startup.
 This was chosen to simplify setup in a containerized environment and ensure that the application can run with zero manual steps.
 
 However, I acknowledge that this does not follow the assignment requirement of using explicit migrations.
-
-### What I would improve with more time
 
 ## 5. Test Credentials
 
@@ -241,6 +232,6 @@ A **Postman collection** is included at `TaskFlow.postman_collection.json`. Impo
 - Apply migrations explicitly using `dotnet ef database update`
 - Refresh tokens — short-lived access tokens + long-lived refresh tokens stored in the DB
 - `PATCH` semantics — current implementation treats `null` as "don't update". A proper JSON Merge Patch (`application/merge-patch+json`) would allow explicitly nulling fields like `assigneeId`
-- Audit log** — append-only task history table showing who changed what and when
+- Audit log — append-only task history table showing who changed what and when
 
 This would provide better schema versioning, traceability, and production safety.
