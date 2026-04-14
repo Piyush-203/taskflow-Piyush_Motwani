@@ -3,9 +3,8 @@
 A task management REST API built with **ASP.NET Core 8 (C#)** and **PostgreSQL**.
 
 > **Note on language choice:** The assignment spec prefers Go but explicitly allows other languages.
-> This implementation uses C# / .NET 8. The architecture directly mirrors
-> what a clean Go implementation would look like: thin controllers, no over-engineered service layers,
-> standard library patterns where possible.
+> This implementation uses C# / .NET 8. The architecture follows a clean and minimal layered design with thin controllers and lightweight service classes. 
+> This mirrors how a simple Go service would be structured, focusing on clarity
 
 ---
 
@@ -29,9 +28,7 @@ TaskFlow lets users register, log in, create projects, add tasks to those projec
 
 ## 2. Architecture Decisions
 
-**Flat controller structure** — No separate service/repository layer. For an app this size, thin controllers calling EF Core directly is readable and maintainable. Adding a service layer would be abstraction for its own sake.
-
-**EF Core with manual migrations** — Migrations are written as C# migration classes (not auto-generated SQL dumps). This gives full up/down control and keeps schema changes reviewable in PRs.
+**Layered architecture (Controller + Service)** — The application follows a simple layered design where controllers handle HTTP requests and delegate business logic to services. This keeps controllers thin while maintaining readability and avoiding over-engineering.
 
 **`TaskItem` model name** — C# has a built-in `System.Threading.Tasks.Task`. The domain model is named `TaskItem` to avoid ambiguity; the DB table is still called `Tasks`.
 
@@ -60,7 +57,7 @@ docker compose up --build
 # API is now available at:
 #   http://localhost:<PORT>/swagger
 #   http://localhost:8080
-#   http://localhost:8080/swagger  ← interactive docs
+#   http://localhost:8080/swagger  <- Example 
 ```
 
 To run in the background:
