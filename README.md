@@ -57,7 +57,7 @@ docker compose up --build
 # API is now available at:
 #   http://localhost:<PORT>/swagger
 #   http://localhost:8080
-#   http://localhost:8080/swagger  <- Example 
+#   http://localhost:8080/swagger 
 ```
 
 To run in the background:
@@ -107,7 +107,7 @@ The seed also creates:
 
 ## 6. API Reference
 
-Interactive docs available at **`http://localhost:8080/swagger`** when running.
+Interactive docs available at **`http://localhost:<PORT>/swagger`** when running.
 
 ### Authentication
 
