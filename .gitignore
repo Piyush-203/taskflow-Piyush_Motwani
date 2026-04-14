@@ -1,0 +1,12 @@
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.csproj.user
+.env
+!.env.example
+postgres_data/
+.idea/
+.vscode/
+*.swp
