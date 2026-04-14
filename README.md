@@ -72,7 +72,7 @@ docker compose down -v
 ```
 
 ---
-### Database Schema Management
+## 4. Database Schema Management
 
 The current implementation uses:
 
